@@ -1,0 +1,61 @@
+from flask import Flask
+import requests
+import os
+from bs4 import BeautifulSoup
+import lxml
+
+url = "https://www.pegaxis.com/services/air-conditioning-heating-and-ventilation"
+
+app = Flask(__name__)
+
+def getData():
+    """Get web data from the website"""
+    req = requests.get(url)
+    soup  = BeautifulSoup(req.content, "lxml")
+    print(soup.prettify())
+    wrapper = soup.find_all("div",class_="clear_bottom")
+    dir = "~/yotchaProjects/scrapData/finalData"
+    if not os.path.exists(dir):
+        os.makedirs(dir) 
+    out = open(dir+"/"+"airConditioning.csv","a+")
+    for data in wrapper:
+        companyLink = data.find("div",class_="name").a["href"]
+        print("The company url::",companyLink)
+        result = getDetailedData(companyLink)
+        saveData(result,out)
+    out.close()
+
+def getDetailedData(compLink):
+    """Entered Inside Details Page"""
+    url2 = "https://www.pegaxis.com/"+compLink
+    req_2 = requests.get(url2)
+    soup_2 = BeautifulSoup(req_2.content,"lxml")
+    outer = soup_2.find("div",class_="company_content")
+    toLoop = outer.find_all("div",class_="form_show")
+    finalVal=[]
+    for val in toLoop:
+       print("Checking thevalue in form_show",val)
+       finalVal.append(val.children(1).find("span").string)
+    print("Checking the returned List",finalVal)
+    return finalVal
+
+def saveData(res,svObj):
+    print("Saving Data To A CSV File")
+    for i in res:
+        svObj.seek(0,2)
+        svObj.write(i)
+    svObj.write('\n')
+
+@app.route("/start")
+def start():
+ 
+   getData()
+    return "Success", 200
+
+@app.route("/")
+def index():
+    print("Server Started")
+    return "Server Is Running", 200
+
+if __name__ == '__main__':
+    app.run()
