@@ -19,9 +19,9 @@ import java.util.Arrays;
 public class Scrapper {
 
     public static void main(String[] args) throws Exception {
-        String url = "https://www.pegaxis.com/services/air-conditioning-heating-and-ventilation";
+        String url = "https://www.something.com/services/something";
         print("Fetching %s...", url);
-        Document doc = Jsoup.parse(new File("/home/yotchaProjects/scrapData/airConditioning.html"), "utf-8");
+        Document doc = Jsoup.parse(new File("/home/projects/scrapData/something.html"), "utf-8");
         Elements tr = doc.select("tr");
         ArrayList<String> arrayList = new ArrayList<String>();
         int count = 0;
@@ -42,7 +42,7 @@ public class Scrapper {
         System.out.println(">>>>" + arrayList.get(28379));
         String jptId = "bd871556-1a82-447c-943a-8c23b6b4e583";
 //        String nextUrl = "https://www.cea.gov.sg//Custom/CEA/PublicRegister/Page/PublicRegisterDetail.aspx?UserId="+jptId;
-        String nextUrl = "http://www.cea.gov.sg/Custom/CEA/PublicRegister/Page/PublicRegisterDetail.aspx?UserId=bd871556-1a82-447c-943a-8c23b6b4e583";
+        String nextUrl = "http://www.something.sg/detail.aspx?UserId=bd871556-1a82-447c-943a-8c23b6b4e583";
 //        String nextUrl = "http://www.facebook.com";
         print("Fetching nextUrl %s...", nextUrl);
         Document nextDoc = Jsoup.connect(nextUrl).userAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36")
